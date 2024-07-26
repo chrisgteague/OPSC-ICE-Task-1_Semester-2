@@ -1,6 +1,6 @@
 package com.example.flappybird_icetask1.Model
 
-class BackgroundImage {
+class BackgroundImage() {
     var x: Int = 0
         get() = field
         set(value) {

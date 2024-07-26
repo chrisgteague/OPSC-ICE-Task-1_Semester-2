@@ -10,22 +10,39 @@ class PlayView(context: Context?) : SurfaceView(context) , SurfaceHolder.Callbac
     private val TAG = "PlayView"
     private var playThread : PlayThread? = null
 
+
     init {
         val holder = holder
         holder.addCallback(this)
         isFocusable = true
         playThread = PlayThread(holder,resources)
     }
-    override fun surfaceCreated(holder: SurfaceHolder) {
-        TODO("Not yet implemented")
-    }
+
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        TODO("Not yet implemented")
-    }
 
+    }
+    override fun surfaceCreated(holder: SurfaceHolder) {
+        if(!playThread!!.isRunning){
+            playThread = holder.let {
+                PlayThread(it!!, resources)
+            }
+        }else{
+            playThread!!.start()
+        }
+    }
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        TODO("Not yet implemented")
+        if(playThread!!.isRunning){
+            playThread!!.isRunning = false
+            var isCheck : Boolean = true
+            while (isCheck) {
+                try{
+                    playThread!!.join()
+                }catch (e : InterruptedException){
+
+                }
+            }
+        }
     }
 
 }
