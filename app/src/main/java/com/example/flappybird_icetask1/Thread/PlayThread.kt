@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.SurfaceHolder
 import com.example.flappybird_icetask1.Model.BackgroundImage
 import com.example.flappybird_icetask1.Model.Bird
+import com.example.flappybird_icetask1.Model.BirdDie
 import com.example.flappybird_icetask1.Model.Cot
 import com.example.flappybird_icetask1.Model.ScreenSize
 import com.example.flappybird_icetask1.R
@@ -44,6 +45,9 @@ class PlayThread : Thread {
     var cotArray : ArrayList<Cot> = arrayListOf()
     var ran : Random = Random
 
+    var iCot = 0
+    var birdDie : BirdDie
+    var isDie = false
     constructor(holder: SurfaceHolder, resources: Resources){
         this.holder = holder
         this.resources = resources
@@ -54,6 +58,10 @@ class PlayThread : Thread {
 
         cot = Cot(resources)
         createCot(resources)
+
+        birdDie = BirdDie(resources)
+
+
     }
 
     private fun createCot(resources: Resources) {
@@ -83,6 +91,9 @@ class PlayThread : Thread {
 
                         //render cot
                         renderCot(canvas)
+
+                        //render when death
+                        renderDeath(canvas)
                     }
                 }finally {
                     holder.unlockCanvasAndPost(canvas)
@@ -100,8 +111,30 @@ class PlayThread : Thread {
         Log.d(TAG, "Thread finish")
     }
 
+    private fun renderDeath(canvas: Canvas?) {
+        if (isDie){
+            var i : Int = birdDie.currentFrame
+            canvas!!.drawBitmap(birdDie.getBirdDie(i), birdDie.x.toFloat(),birdDie.y.toFloat(), null)
+            i++
+            birdDie.currentFrame = i
+            if(i == birdDie.maxFrame){
+                isRunning = false
+            }
+        }
+    }
+
     private fun renderCot(canvas: Canvas?) {
         if (state == 1){//running
+            if(cotArray.get(iCot).x < bird.x - cot!!.w){
+                iCot++
+                if(iCot > numCot - 1){
+                    iCot = 0
+                }
+            }
+            else if (((cotArray.get(iCot).x)<bird.x + bird.getBird(0).width) &&
+                    (cotArray.get(iCot).ccY<bird.y || cotArray.get(iCot).getBottomY() < bird.y + bird.getBird(0).height)){
+                    isDie = true
+            }
             for(i in 0 until numCot){
                 if(cotArray.get(i).x < - cot!!.w){
                     cotArray.get(i).x = cotArray.get(i).x + numCot*kc
@@ -120,20 +153,22 @@ class PlayThread : Thread {
     }
 
     private fun renderBird(canvas: Canvas?) {
-        if(state == 1){
-            if(bird.y < (ScreenSize.SCREEN_HEIGHT - bird.getBird(0).height) || velocityBird < 0){
-                velocityBird = velocityBird + 2
-                bird.y = bird.y + velocityBird //up
+        if(state == 1) {
+            if (!isDie) {
+                if (bird.y < (ScreenSize.SCREEN_HEIGHT - bird.getBird(0).height) || velocityBird < 0) {
+                    velocityBird = velocityBird + 2
+                    bird.y = bird.y + velocityBird //up
+                }
             }
         }
-
-        var current: Int = bird.currentFrame
-        canvas!!.drawBitmap(bird.getBird(current), bird.x.toFloat(), bird.y.toFloat(), null)
-        current++
-        if (current > bird.maxFrame)  //current > 7
-            current = 0
-        bird.currentFrame = current
-
+        if (!isDie) {
+            var current: Int = bird.currentFrame
+            canvas!!.drawBitmap(bird.getBird(current), bird.x.toFloat(), bird.y.toFloat(), null)
+            current++
+            if (current > bird.maxFrame)
+                current = 0
+            bird.currentFrame = current
+        }
     }
 
 

@@ -17,7 +17,7 @@ class BirdDie(res : Resources) {
             field = value
         }
 
-    val maxFrame : Int = 3
+    val maxFrame : Int = 4
     var currentFrame : Int = 0
         get() = field
         set(value) {
@@ -32,9 +32,9 @@ class BirdDie(res : Resources) {
         deathArray.add(BitmapFactory.decodeResource(res, R.drawable.youdied_1))
         deathArray.add(BitmapFactory.decodeResource(res, R.drawable.youdied_2))
         deathArray.add(BitmapFactory.decodeResource(res, R.drawable.youdied_3))
-
-        //x = ScreenSize.SCREEN_WIDTH/2 - birdArray[0].width/2
-        //y = ScreenSize.SCREEN_HEIGHT/2 - birdArray[0].height/2
+        deathArray.add(BitmapFactory.decodeResource(res, R.drawable.youdied_4))
+        x = ScreenSize.SCREEN_WIDTH/2 - deathArray[0].width/2
+        y = ScreenSize.SCREEN_HEIGHT/2 - deathArray[0].height/2
     }
     fun getBirdDie(i : Int) : Bitmap{
         return deathArray.get(i)
