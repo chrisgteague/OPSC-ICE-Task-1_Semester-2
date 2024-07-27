@@ -1,8 +1,10 @@
 package com.example.flappybird_icetask1.UI
 
 import android.content.Context
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.constraintlayout.widget.ConstraintSet.Motion
 import com.example.flappybird_icetask1.Thread.PlayThread
 
 class PlayView(context: Context?) : SurfaceView(context) , SurfaceHolder.Callback {
@@ -43,6 +45,17 @@ class PlayView(context: Context?) : SurfaceView(context) , SurfaceHolder.Callbac
                 }
             }
         }
+    }
+
+    //bird fly fly
+
+    override fun onTouchEvent(event : MotionEvent?): Boolean{
+        val ev = event!!.action
+        if(ev == MotionEvent.ACTION_DOWN){
+            //bird jump when touch screen
+            playThread!!.Jump()
+        }
+        return true
     }
 
 }
