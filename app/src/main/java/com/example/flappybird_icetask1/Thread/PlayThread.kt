@@ -1,21 +1,28 @@
 package com.example.flappybird_icetask1.Thread
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.SurfaceHolder
+import androidx.core.content.ContextCompat.startActivity
+import com.example.flappybird_icetask1.MainActivity
 import com.example.flappybird_icetask1.Model.BackgroundImage
 import com.example.flappybird_icetask1.Model.Bird
 import com.example.flappybird_icetask1.Model.BirdDie
 import com.example.flappybird_icetask1.Model.Cot
 import com.example.flappybird_icetask1.Model.ScreenSize
 import com.example.flappybird_icetask1.R
+import com.example.flappybird_icetask1.UI.PlayGameActivity
 import kotlin.random.Random
 
 class PlayThread : Thread {
+
 
     private val TAG : String = "PlayThread"
     private var holder : SurfaceHolder
@@ -99,7 +106,7 @@ class PlayThread : Thread {
                     holder.unlockCanvasAndPost(canvas)
                 }
             }
-           frameTime = (System.nanoTime() - startTime)/1000000
+            frameTime = (System.nanoTime() - startTime)/1000000
             if (frameTime < FPS){
                 try {
                     Thread.sleep(FPS - frameTime)
@@ -119,7 +126,10 @@ class PlayThread : Thread {
             birdDie.currentFrame = i
             if(i == birdDie.maxFrame){
                 isRunning = false
+
             }
+
+
         }
     }
 
@@ -132,8 +142,8 @@ class PlayThread : Thread {
                 }
             }
             else if (((cotArray.get(iCot).x)<bird.x + bird.getBird(0).width) &&
-                    (cotArray.get(iCot).ccY<bird.y || cotArray.get(iCot).getBottomY() < bird.y + bird.getBird(0).height)){
-                    isDie = true
+                (cotArray.get(iCot).ccY<bird.y || cotArray.get(iCot).getBottomY() < bird.y + bird.getBird(0).height)){
+                isDie = true
             }
             for(i in 0 until numCot){
                 if(cotArray.get(i).x < - cot!!.w){
@@ -203,6 +213,6 @@ class PlayThread : Thread {
         state = 1
 
         if(bird.y > 0)
-        velocityBird = -30
+            velocityBird = -30
     }
 }
