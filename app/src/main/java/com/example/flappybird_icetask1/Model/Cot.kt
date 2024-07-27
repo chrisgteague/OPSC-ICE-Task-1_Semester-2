@@ -6,7 +6,9 @@ import com.example.flappybird_icetask1.R
 
 class Cot(res : Resources) {
     val cotTop = BitmapFactory.decodeResource(res, R.drawable.cot_top)
+        get() = field
     val cotBottom = BitmapFactory.decodeResource(res, R.drawable.cot_bottom)
+        get() = field
 
     val w = cotTop.width
     val h = cotTop.height
